@@ -4976,8 +4976,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -5099,14 +5099,14 @@
       "endTimeGMT": "2026-07-29 17:32:07",
       "qualifyingDive": false,
       "activityUUID": "65cfc16f-e76e-4203-a379-5b01ecb52d1f",
-      "autoCalcCalories": false,
-      "favorite": false,
-      "purposeful": false,
-      "manualActivity": false,
       "elevationCorrected": false,
       "atpActivity": false,
       "pr": false,
       "decoDive": false,
+      "autoCalcCalories": false,
+      "favorite": false,
+      "manualActivity": false,
+      "purposeful": false,
       "parent": false
     },
     {
@@ -5119,8 +5119,8 @@
         "typeKey": "running",
         "parentTypeId": 17,
         "isHidden": false,
-        "trimmable": true,
-        "restricted": false
+        "restricted": false,
+        "trimmable": true
       },
       "eventType": {
         "typeId": 9,
@@ -5310,14 +5310,14 @@
       "endTimeGMT": "2026-07-26 19:33:29",
       "qualifyingDive": false,
       "activityUUID": "8d83d6dc-b764-4785-a49a-25ecc300ae9e",
-      "autoCalcCalories": false,
-      "favorite": false,
-      "purposeful": false,
-      "manualActivity": false,
       "elevationCorrected": false,
       "atpActivity": false,
       "pr": true,
       "decoDive": false,
+      "autoCalcCalories": false,
+      "favorite": false,
+      "manualActivity": false,
+      "purposeful": false,
       "parent": false
     },
     {
@@ -5330,8 +5330,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -5462,14 +5462,14 @@
       "endTimeGMT": "2026-07-26 16:57:44",
       "qualifyingDive": false,
       "activityUUID": "f5acaf8d-baa7-48c2-a372-dee9f994172e",
-      "autoCalcCalories": false,
-      "favorite": false,
-      "purposeful": false,
-      "manualActivity": false,
       "elevationCorrected": false,
       "atpActivity": false,
       "pr": false,
       "decoDive": false,
+      "autoCalcCalories": false,
+      "favorite": false,
+      "manualActivity": false,
+      "purposeful": false,
       "parent": false
     },
     {
@@ -5482,8 +5482,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -5623,14 +5623,14 @@
       "endTimeGMT": "2026-07-23 15:30:41",
       "qualifyingDive": false,
       "activityUUID": "945a10ca-d255-48de-9c93-e20d41869617",
-      "autoCalcCalories": false,
-      "favorite": false,
-      "purposeful": false,
-      "manualActivity": false,
       "elevationCorrected": false,
       "atpActivity": false,
       "pr": false,
       "decoDive": false,
+      "autoCalcCalories": false,
+      "favorite": false,
+      "manualActivity": false,
+      "purposeful": false,
       "parent": false
     },
     {
@@ -5643,8 +5643,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -5802,14 +5802,14 @@
       "endTimeGMT": "2026-07-21 15:35:12",
       "qualifyingDive": false,
       "activityUUID": "102301b9-90f5-4d49-952c-c0e46df5815e",
-      "autoCalcCalories": false,
-      "favorite": false,
-      "purposeful": false,
-      "manualActivity": false,
       "elevationCorrected": false,
       "atpActivity": false,
       "pr": false,
       "decoDive": false,
+      "autoCalcCalories": false,
+      "favorite": false,
+      "manualActivity": false,
+      "purposeful": false,
       "parent": false
     }
   ],
