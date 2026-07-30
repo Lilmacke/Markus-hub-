@@ -12,3 +12,4 @@ manifest.json
 utmaning_status.json
 server.py
 aktier_cache.json
+strong-export/
