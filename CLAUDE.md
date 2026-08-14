@@ -20,7 +20,11 @@ kost och en 30-dagars-utmaning till en enda sida, byggd och serverad live av ser
 - **"Fråga din hub"** — chattruta på sidan (`bygg_fraga_html()` i hub.py). Skickar frågan
   till `/fraga`, som via `hub.svara_pa_fraga()` bygger ihop kontext (senaste
   träningspass, daglig historik, kost, utmaning) med `hub.fraga_data_sammanfattning()`
-  och frågar Claude (`AI_MODELL`). Kräver `ai_nyckel.json`.
+  och frågar Claude (`AI_MODELL`). Kräver att AI-nyckeln finns i Credential Manager
+  (se nedan).
+- Vid fel i den schemalagda körningen (t.ex. Garmin-inloggning som misslyckas) skickas en
+  Windows-notis via `skicka_notis()` (paketet `winotify`) istället för att felet bara
+  hamnar tyst i `log.txt`.
 - **run_hub.bat** — körs av schemaläggning (Schemalagda aktiviteter, uppgiften
   "GarminHub"), anropar `py hub.py` och loggar till `debug_log.txt`/`log.txt`.
 - **run_server.bat** + startmappen — server.py startas automatiskt vid inloggning via
@@ -37,12 +41,18 @@ kost och en 30-dagars-utmaning till en enda sida, byggd och serverad live av ser
 
 ## Data / state (lokal, mestadels inte i git — se nedan)
 
-- `garmin_konto.json` — sparade Garmin-inloggningsuppgifter i klartext
-- `ai_nyckel.json` — Anthropic API-nyckel, används för "Fråga din hub" och dagliga förslag
-  (modell: `claude-haiku-4-5-20251001`, satt i `hub.py`)
+- Garmin-inloggning och Anthropic API-nyckel ligger i **Windows Credential Manager**
+  (via `keyring`-paketet, service `garmin-hub`), inte i klartext på disk. `garmin_konto.json`
+  och `ai_nyckel.json` migreras dit automatiskt engångsvis om de hittas (döps sedan om till
+  `.migrerad`) — se `_migrera_garmin_konto()`/`_migrera_ai_nyckel()` i hub.py. Genomfört
+  2026-08-14.
 - `historik.csv` — daglig historik av nyckeltal (i git)
 - `raw_debug.json` — senaste rådata från Garmin (i git)
 - `aktier_cache.json`, `ai_analys_cache.json` — cachar för att undvika onödiga API-anrop
+- `vecko_analys_cache.json` — cachad AI-veckoanalys ("Veckans mönster" på hemskärmen),
+  genereras högst en gång per ISO-vecka av hub.py:s schemalagda körning
+  (`hämta_eller_generera_veckoanalys`); server.py läser bara cachen, genererar aldrig
+  själv (`hämta_veckoanalys_text`)
 - `kost.db` (SQLite) — kostloggning, ersatte tidigare `kost_status.json`
 - `utmaning_status.json` — dagens/tidigare dagars status för 30-dagars-utmaningen
 - `strong-export/`, `tiktok-export/` — manuellt exporterade CSV:er som läses in

@@ -1,4 +1,5 @@
 garmin_konto.json
+garmin_konto.json.migrerad
 debug_log.txt
 log.txt
 server_log.txt
@@ -8,7 +9,9 @@ run_server.bat
 test.bat
 test.txt
 ai_nyckel.json
+ai_nyckel.json.migrerad
 ai_analys_cache.json
+vecko_analys_cache.json
 manifest.json
 utmaning_status.json
 aktier_cache.json

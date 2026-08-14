@@ -15,10 +15,14 @@ import math
 import os
 import sqlite3
 import subprocess
+import sys
+import traceback
 
 from garminconnect import Garmin
 import yfinance as yf
 import requests
+from winotify import Notification
+import keyring
 
 BRANSCHER = [
     ("Index", [
@@ -70,7 +74,9 @@ TICKERS = [ticker for _, bolag in BRANSCHER for ticker, _, _ in bolag]
 HISTORIK_FIL = "historik.csv"
 KONTOFIL = "garmin_konto.json"
 AI_NYCKEL_FIL = "ai_nyckel.json"
+KEYRING_SERVICE = "garmin-hub"
 AI_CACHE_FIL = "ai_analys_cache.json"
+VECKO_ANALYS_CACHE_FIL = "vecko_analys_cache.json"
 AI_MODELL = "claude-haiku-4-5-20251001"
 
 UTMANING_FIL = "utmaning_status.json"
@@ -102,15 +108,32 @@ KOST_MÅL_KOLHYDRATER = round((KOST_MÅL_KCAL - KOST_MÅL_PROTEIN * 4 - KOST_MÅ
 
 
 def hamta_sparade_uppgifter():
-    if os.path.exists(KONTOFIL):
-        with open(KONTOFIL, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return None
+    email = keyring.get_password(KEYRING_SERVICE, "garmin-epost")
+    password = keyring.get_password(KEYRING_SERVICE, "garmin-losenord") if email else None
+    if email and password:
+        return {"email": email, "password": password}
+    return _migrera_garmin_konto()
+
+
+def _migrera_garmin_konto():
+    """Engångsmigrering: flyttar in den gamla garmin_konto.json (klartext) i Windows
+    Credential Manager, sedan döps filen om så den inte läses igen."""
+    if not os.path.exists(KONTOFIL):
+        return None
+    with open(KONTOFIL, "r", encoding="utf-8") as f:
+        gammal = json.load(f) or {}
+    email, password = gammal.get("email"), gammal.get("password")
+    if not email or not password:
+        return None
+    spara_uppgifter(email, password)
+    os.rename(KONTOFIL, KONTOFIL + ".migrerad")
+    print(f"Migrerade Garmin-inloggning från {KONTOFIL} till Windows Credential Manager.")
+    return {"email": email, "password": password}
 
 
 def spara_uppgifter(email, password):
-    with open(KONTOFIL, "w", encoding="utf-8") as f:
-        json.dump({"email": email, "password": password}, f)
+    keyring.set_password(KEYRING_SERVICE, "garmin-epost", email)
+    keyring.set_password(KEYRING_SERVICE, "garmin-losenord", password)
 
 
 def säker(func, *args, **kwargs):
@@ -120,6 +143,18 @@ def säker(func, *args, **kwargs):
     except Exception as e:
         print(f"  (kunde inte hämta {func.__name__}: {e})")
         return None
+
+
+def skicka_notis(titel, meddelande):
+    """Visar en Windows-notis. Krascha aldrig på grund av notisen själv."""
+    try:
+        Notification(
+            app_id="GarminHub",
+            title=titel,
+            msg=meddelande[:250],
+        ).show()
+    except Exception as e:
+        print(f"  (kunde inte visa notis: {e})")
 
 
 def hämta_rutt(client, activity_id, max_punkter=150):
@@ -1414,10 +1449,25 @@ def bygg_insikter(nyckeltal, senaste_historik, aktier):
 
 
 def hämta_ai_nyckel():
-    if os.path.exists(AI_NYCKEL_FIL):
-        with open(AI_NYCKEL_FIL, "r", encoding="utf-8") as f:
-            return (json.load(f) or {}).get("api_key")
-    return None
+    nyckel = keyring.get_password(KEYRING_SERVICE, "ai-api-nyckel")
+    if nyckel:
+        return nyckel
+    return _migrera_ai_nyckel()
+
+
+def _migrera_ai_nyckel():
+    """Engångsmigrering: flyttar in den gamla ai_nyckel.json (klartext) i Windows
+    Credential Manager, sedan döps filen om så den inte läses igen."""
+    if not os.path.exists(AI_NYCKEL_FIL):
+        return None
+    with open(AI_NYCKEL_FIL, "r", encoding="utf-8") as f:
+        nyckel = (json.load(f) or {}).get("api_key")
+    if not nyckel:
+        return None
+    keyring.set_password(KEYRING_SERVICE, "ai-api-nyckel", nyckel)
+    os.rename(AI_NYCKEL_FIL, AI_NYCKEL_FIL + ".migrerad")
+    print(f"Migrerade AI-nyckel från {AI_NYCKEL_FIL} till Windows Credential Manager.")
+    return nyckel
 
 
 def ai_data_sammanfattning(nyckeltal, senaste_historik, aktier):
@@ -1513,6 +1563,79 @@ def hämta_eller_generera_ai_analys(nyckeltal, senaste_historik, aktier):
             json.dump({"datum": idag, "text": text}, f, ensure_ascii=False)
         return text
     return cache.get("text")
+
+
+def aktuell_iso_vecka():
+    iso = datetime.date.today().isocalendar()
+    return f"{iso[0]}-W{iso[1]:02d}"
+
+
+def generera_veckoanalys(data_text, api_nyckel):
+    """Skickar veckans/periodens data till Claude och ber om djupare mönster - inte bara dagens siffror."""
+    prompt = (
+        "Du är en personlig hälso-, tränings- och ekonomicoach. Titta igenom periodens data "
+        "nedan och hitta 2-3 konkreta mönster eller samband som Markus troligen inte redan märkt "
+        "- till exempel mellan sömn och prestation, träning och återhämtning, eller kost och "
+        "energinivå. Skriv en kort sammanfattning (max 5-6 meningar) på svenska, konkret och med "
+        "siffror/datum. Undvik floskler och generella råd. Ren löptext utan markdown-formatering "
+        "- inga rubriker (#), ingen fetstil (**), inga listor.\n\n" + data_text
+    )
+    try:
+        svar = requests.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={
+                "x-api-key": api_nyckel,
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json",
+            },
+            json={"model": AI_MODELL, "max_tokens": 500, "messages": [{"role": "user", "content": prompt}]},
+            timeout=30,
+        )
+        svar.raise_for_status()
+        return svar.json()["content"][0]["text"].strip()
+    except Exception as e:
+        print(f"  (veckoanalys misslyckades: {e})")
+        return None
+
+
+def hämta_eller_generera_veckoanalys(nyckeltal, historik, aktier, kost_data, utmaning_data, aktiviteter):
+    """Genererar högst en veckoanalys per ISO-vecka. Anropas från hub.py:s schemalagda körning -
+    servern läser bara den cachade texten (hämta_veckoanalys_text), den genererar aldrig själv."""
+    api_nyckel = hämta_ai_nyckel()
+    if not api_nyckel:
+        return None
+
+    vecka = aktuell_iso_vecka()
+    cache = {}
+    if os.path.exists(VECKO_ANALYS_CACHE_FIL):
+        try:
+            with open(VECKO_ANALYS_CACHE_FIL, "r", encoding="utf-8") as f:
+                cache = json.load(f)
+        except Exception:
+            cache = {}
+
+    if cache.get("vecka") == vecka and cache.get("text"):
+        return cache["text"]
+
+    data_text = fraga_data_sammanfattning(nyckeltal, historik, aktier, kost_data, utmaning_data, aktiviteter)
+    text = generera_veckoanalys(data_text, api_nyckel)
+    if text:
+        with open(VECKO_ANALYS_CACHE_FIL, "w", encoding="utf-8") as f:
+            json.dump({"vecka": vecka, "text": text}, f, ensure_ascii=False)
+        return text
+    return cache.get("text")
+
+
+def hämta_veckoanalys_text():
+    """Läser senast cachade veckoanalys, om någon finns. Genererar aldrig en ny - det gör
+    hämta_eller_generera_veckoanalys() via hub.py:s schemalagda körning."""
+    if os.path.exists(VECKO_ANALYS_CACHE_FIL):
+        try:
+            with open(VECKO_ANALYS_CACHE_FIL, "r", encoding="utf-8") as f:
+                return (json.load(f) or {}).get("text")
+        except Exception:
+            return None
+    return None
 
 
 def fraga_data_sammanfattning(nyckeltal, historik, aktier, kost_data, utmaning_data, aktiviteter=None):
@@ -2005,6 +2128,13 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
     steg_procent = max(0, min(100, round(steg / steg_mål * 100)))
     halsning_text = hälsning()
 
+    veckoanalys_text = hämta_veckoanalys_text()
+    veckoanalys_html = f"""
+    <div class="card">
+        <h2>Veckans mönster <span class="tile-sub">uppdateras en gång per vecka</span></h2>
+        <div class="text-block">{veckoanalys_text}</div>
+    </div>""" if veckoanalys_text else ""
+
     html = f"""<!DOCTYPE html>
 <html lang="sv">
 <head>
@@ -2130,7 +2260,7 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
     .strong-sets {{ font-size:0.75rem; color:var(--muted); margin-top:0.2rem; }}
 
     .kost-grid {{ display:grid; grid-template-columns: repeat(2, 1fr); gap:0.8rem; }}
-    .kost-rad {{ background:var(--card-2); border-radius:12px; padding:0.7rem 0.9rem; }}
+    .kost-rad {{ background:var(--card-2); border-radius:12px; padding:0.7rem 0.9rem; min-width:0; }}
     .kost-rad.sparar {{ opacity:0.6; }}
     .kost-topp {{ display:flex; justify-content:space-between; align-items:baseline;
                   font-size:0.7rem; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:0.35rem; }}
@@ -2173,6 +2303,8 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
     .insikt {{ display:flex; align-items:flex-start; gap:0.6rem; padding:0.55rem 0;
                border-bottom:1px solid var(--border); font-size:0.85rem; line-height:1.4; }}
     .insikt:last-child {{ border-bottom:none; }}
+
+    .text-block {{ font-size:0.88rem; line-height:1.6; color:var(--text); }}
 
     .bock-rad {{ display:flex; align-items:flex-start; gap:0.6rem; padding:0.55rem 0;
                  border-bottom:1px solid var(--border); font-size:0.85rem; line-height:1.4; cursor:pointer; }}
@@ -2264,6 +2396,8 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
             <h2>Analys <span class="tile-sub">gårdagen &amp; natten mot ditt snitt</span></h2>
             {insikter_html}
         </div>
+
+        {veckoanalys_html}
 
         {bygg_fraga_html()}
 
@@ -2412,20 +2546,31 @@ def push_to_github():
 
 
 if __name__ == "__main__":
-    garmin_data = hamta_garmin_data()
-    aktiedata = hamta_aktiekurser(TICKERS)
-    historik = spara_historik(garmin_data, aktiedata)
+    try:
+        garmin_data = hamta_garmin_data()
+        aktiedata = hamta_aktiekurser(TICKERS)
+        historik = spara_historik(garmin_data, aktiedata)
 
-    with open("aktier_cache.json", "w", encoding="utf-8") as f:
-        json.dump(aktiedata, f, ensure_ascii=False)
+        with open("aktier_cache.json", "w", encoding="utf-8") as f:
+            json.dump(aktiedata, f, ensure_ascii=False)
 
-    print("Kollar dagens utmaning...")
-    utmaning_data = hämta_utmaning_data()
-    utmaning_data = säkerställ_dagens_kategorier(utmaning_data, garmin_data["datum"])
-    spara_utmaning_data(utmaning_data)
+        print("Kollar dagens utmaning...")
+        utmaning_data = hämta_utmaning_data()
+        utmaning_data = säkerställ_dagens_kategorier(utmaning_data, garmin_data["datum"])
+        spara_utmaning_data(utmaning_data)
 
-    print(f"\nKlart! (Historik sparad i {HISTORIK_FIL} — {len(historik)} dag(ar) hittills). "
-          "Sidan byggs live av server.py — inget att öppna härifrån.")
+        print("Kollar veckoanalys...")
+        hämta_eller_generera_veckoanalys(
+            extrahera_nyckeltal(garmin_data), historik, aktiedata,
+            hämta_kost_data(), utmaning_data, garmin_data.get("aktiviteter") or [],
+        )
 
-    push_to_github()
+        print(f"\nKlart! (Historik sparad i {HISTORIK_FIL} — {len(historik)} dag(ar) hittills). "
+              "Sidan byggs live av server.py — inget att öppna härifrån.")
+
+        push_to_github()
+    except Exception as e:
+        traceback.print_exc()
+        skicka_notis("GarminHub: körningen misslyckades", f"{type(e).__name__}: {e}\nSe log.txt för detaljer.")
+        sys.exit(1)
 
