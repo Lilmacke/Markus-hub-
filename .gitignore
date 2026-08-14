@@ -15,3 +15,5 @@ aktier_cache.json
 strong-export/
 tiktok-export/
 kost_status.json
+kost_status.json.migrerad
+kost.db
