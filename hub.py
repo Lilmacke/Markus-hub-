@@ -1,9 +1,10 @@
 ﻿"""
 Min personliga hub: Garmin (utökad) + aktier + historik + dagsvariation -> en HTML-sida.
 
-Kör så här:
+Sidan byggs och serveras live av server.py (http://<tailscale-ip-eller-namn>:5000) —
+det här scriptet uppdaterar bara den underliggande datan (Garmin, aktier, utmaning) och
+committar historiken till git. Körs via schemaläggning en gång i timmen:
     py hub.py
-    py hub.py --tyst   (hoppar över att öppna webbläsaren, används vid schemaläggning)
 """
 
 import getpass
@@ -14,8 +15,6 @@ import math
 import os
 import sqlite3
 import subprocess
-import sys
-import webbrowser
 
 from garminconnect import Garmin
 import yfinance as yf
@@ -532,7 +531,7 @@ IKON_SVG = (
 MANIFEST_JSON = json.dumps({
     "name": "Min Hub",
     "short_name": "Min Hub",
-    "start_url": "min_hub.html",
+    "start_url": "/",
     "display": "standalone",
     "background_color": "#0b0e14",
     "theme_color": "#0b0e14",
@@ -1411,6 +1410,127 @@ def hämta_eller_generera_ai_analys(nyckeltal, senaste_historik, aktier):
     return cache.get("text")
 
 
+def fraga_data_sammanfattning(nyckeltal, historik, aktier, kost_data, utmaning_data, aktiviteter=None):
+    """Bygger kontext om all tillgänglig data (hälsa, aktier, kost, utmaning, träningspass) till en fri fråga till Claude."""
+    delar = [ai_data_sammanfattning(nyckeltal, historik[-30:], aktier)]
+
+    if aktiviteter:
+        rader = ["Senaste träningspassen (datum/tid, typ, distans, kalorier):"]
+        for a in aktiviteter[:20]:
+            namn = a.get("activityName", "Okänt pass")
+            distans = a.get("distance")
+            distans_km = round(distans / 1000, 2) if distans else None
+            kal = a.get("calories")
+            datum = kort_datumtid(a.get("startTimeLocal", ""))
+            rader.append(f"{datum}: {namn}, {distans_km if distans_km else '–'} km, {kal if kal else '–'} kcal")
+        delar.append("\n".join(rader))
+
+    if historik:
+        kolumner = ["datum", "somn_min", "vilopuls", "sleep_score", "stress", "hrv", "steg", "batteri", "total_kalorier"]
+        rader = ["Daglig historik (datum, sömn(min), vilopuls, sleep score, stress, hrv, steg, kroppsbatteri, kalorier):"]
+        for r in historik[-60:]:
+            rader.append(", ".join(str(r.get(k) or "–") for k in kolumner))
+        delar.append("\n".join(rader))
+
+    if kost_data:
+        rader = [
+            "Kostlogg per dag (kcal/protein/fett/kolhydrater, mål: "
+            f"{KOST_MÅL_KCAL} kcal, {KOST_MÅL_PROTEIN}g protein, {KOST_MÅL_FETT}g fett, {KOST_MÅL_KOLHYDRATER}g kolhydrater):"
+        ]
+        for datum in sorted(kost_data.keys())[-30:]:
+            f = kost_data[datum]
+            rader.append(
+                f"{datum}: {f.get('kcal') or '–'} kcal, {f.get('protein') or '–'}g protein, "
+                f"{f.get('fett') or '–'}g fett, {f.get('kolhydrater') or '–'}g kolhydrater"
+            )
+        delar.append("\n".join(rader))
+
+    if utmaning_data and utmaning_data.get("dagar"):
+        dagar = utmaning_data["dagar"]
+        rader = [f"30-dagars-utmaningen (sedan {utmaning_data.get('start_datum', '?')}), avklarade dagar per kategori:"]
+        for nyckel, etikett in DAGLIGA_KATEGORIER:
+            antal_klara = sum(1 for dag in dagar.values() if (dag.get(nyckel) or {}).get("klar"))
+            rader.append(f"{etikett}: {antal_klara}/{len(dagar)} dagar avklarade")
+        delar.append("\n".join(rader))
+
+    return "\n\n".join(delar)
+
+
+def svara_pa_fraga(fraga, garmin, historik, aktier, kost_data, utmaning_data, api_nyckel):
+    """Skickar en fri fråga från användaren till Claude tillsammans med all tillgänglig data som kontext."""
+    nyckeltal = extrahera_nyckeltal(garmin)
+    aktiviteter = garmin.get("aktiviteter") or []
+    data_text = fraga_data_sammanfattning(nyckeltal, historik, aktier, kost_data, utmaning_data, aktiviteter)
+    prompt = (
+        "Du är en personlig assistent med tillgång till Markus tränings-, hälso-, kost- och aktiedata "
+        "nedan. Svara kort och konkret på frågan i slutet, referera gärna till faktiska siffror eller "
+        "datum ur datan. Om datan inte räcker för att svara säkert, säg det ärligt istället för att "
+        "gissa. Svara på svenska, ren löptext utan markdown-formatering — inga rubriker (#), ingen "
+        "fetstil (**), inga listor.\n\n"
+        f"DATA:\n{data_text}\n\nFRÅGA: {fraga}"
+    )
+    try:
+        svar = requests.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={
+                "x-api-key": api_nyckel,
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json",
+            },
+            json={"model": AI_MODELL, "max_tokens": 500, "messages": [{"role": "user", "content": prompt}]},
+            timeout=30,
+        )
+        svar.raise_for_status()
+        return svar.json()["content"][0]["text"].strip()
+    except Exception as e:
+        print(f"  (fråga misslyckades: {e})")
+        return None
+
+
+def bygg_fraga_html():
+    return """
+    <div class="card" style="margin-bottom:1rem;">
+        <h2>Fråga din hub</h2>
+        <div class="fraga-box">
+            <input type="text" id="fraga-input" class="fraga-input"
+                   placeholder="T.ex. hur har min sömn varit senaste veckan?"
+                   onkeydown="if(event.key==='Enter') stallFraga()">
+            <button id="fraga-knapp" class="fraga-knapp" onclick="stallFraga()">Fråga</button>
+        </div>
+        <div id="fraga-svar" class="fraga-svar" style="display:none;"></div>
+    </div>
+    <script>
+    function stallFraga() {
+        var input = document.getElementById('fraga-input');
+        var knapp = document.getElementById('fraga-knapp');
+        var svarBox = document.getElementById('fraga-svar');
+        var fraga = input.value.trim();
+        if (!fraga) return;
+        knapp.disabled = true;
+        knapp.textContent = 'Tänker...';
+        svarBox.style.display = 'none';
+        fetch('/fraga', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({fraga: fraga})
+        })
+            .then(function(r) { return r.json().then(function(d) { return {ok: r.ok, data: d}; }); })
+            .then(function(res) {
+                svarBox.style.display = 'block';
+                svarBox.textContent = res.ok ? res.data.svar : (res.data.fel || 'Något gick fel.');
+            })
+            .catch(function() {
+                svarBox.style.display = 'block';
+                svarBox.textContent = 'Kunde inte fråga. Öppna sidan via serverlänken (Tailscale) för att kunna göra detta.';
+            })
+            .finally(function() {
+                knapp.disabled = false;
+                knapp.textContent = 'Fråga';
+            });
+    }
+    </script>"""
+
+
 def hämta_utmaning_data():
     if os.path.exists(UTMANING_FIL):
         with open(UTMANING_FIL, "r", encoding="utf-8") as f:
@@ -1859,6 +1979,15 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
     .kost-input {{ width:100%; background:var(--card); border:1px solid var(--border); border-radius:8px;
                     color:var(--text); font-size:1.1rem; font-weight:700; padding:0.4rem 0.6rem; }}
 
+    .fraga-box {{ display:flex; gap:0.6rem; }}
+    .fraga-input {{ flex:1; background:var(--card-2); border:1px solid var(--border); border-radius:8px;
+                     color:var(--text); font-size:0.9rem; padding:0.6rem 0.8rem; }}
+    .fraga-knapp {{ background:var(--blue); color:white; border:none; border-radius:999px;
+                     padding:0.6rem 1.1rem; font-size:0.85rem; font-weight:600; cursor:pointer; flex-shrink:0; }}
+    .fraga-knapp:disabled {{ opacity:0.6; cursor:default; }}
+    .fraga-svar {{ margin-top:0.9rem; font-size:0.88rem; line-height:1.5; background:var(--card-2);
+                    border-radius:10px; padding:0.8rem 1rem; white-space:pre-wrap; }}
+
     .stock-row {{ display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0; border-bottom:1px solid var(--border); }}
     .stock-row:last-child {{ border-bottom:none; }}
     .stock-name {{ font-weight:600; font-size:0.9rem; }}
@@ -1945,6 +2074,8 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
         <h2>Analys <span class="tile-sub">uppdateras varje körning</span></h2>
         {insikter_html}
     </div>
+
+    {bygg_fraga_html()}
 
     {utmaning_html}
 
@@ -2079,8 +2210,6 @@ def push_to_github():
 
 
 if __name__ == "__main__":
-    tyst_läge = "--tyst" in sys.argv
-
     garmin_data = hamta_garmin_data()
     aktiedata = hamta_aktiekurser(TICKERS)
     historik = spara_historik(garmin_data, aktiedata)
@@ -2093,31 +2222,8 @@ if __name__ == "__main__":
     utmaning_data = säkerställ_dagens_kategorier(utmaning_data, garmin_data["datum"])
     spara_utmaning_data(utmaning_data)
 
-    html = bygg_html(garmin_data, aktiedata, historik, utmaning_data=utmaning_data)
-
-    filnamn = "min_hub.html"
-    with open(filnamn, "w", encoding="utf-8") as f:
-        f.write(html)
-    with open("manifest.json", "w", encoding="utf-8") as f:
-        f.write(MANIFEST_JSON)
-
-    onedrive = os.environ.get("OneDrive")
-    if onedrive:
-        mobil_mapp = os.path.join(onedrive, "MinHub")
-        os.makedirs(mobil_mapp, exist_ok=True)
-        with open(os.path.join(mobil_mapp, filnamn), "w", encoding="utf-8") as f:
-            f.write(html)
-        with open(os.path.join(mobil_mapp, "manifest.json"), "w", encoding="utf-8") as f:
-            f.write(MANIFEST_JSON)
-        print(f"Kopia sparad i OneDrive ({mobil_mapp}) för mobilåtkomst.")
-
-    print(f"\nKlart! (Historik sparad i {HISTORIK_FIL} — {len(historik)} dag(ar) hittills)")
-
-    if tyst_läge:
-        print("Tyst läge: öppnar inte webbläsaren automatiskt.")
-    else:
-        print(f"Öppnar {filnamn} i webbläsaren...")
-        webbrowser.open("file://" + os.path.abspath(filnamn))
+    print(f"\nKlart! (Historik sparad i {HISTORIK_FIL} — {len(historik)} dag(ar) hittills). "
+          "Sidan byggs live av server.py — inget att öppna härifrån.")
 
     push_to_github()
 

@@ -1,8 +1,10 @@
 garmin_konto.json
 debug_log.txt
 log.txt
+server_log.txt
 min_hub.html
 run_hub.bat
+run_server.bat
 test.bat
 test.txt
 ai_nyckel.json
@@ -15,3 +17,4 @@ tiktok-export/
 kost_status.json
 kost_status.json.migrerad
 kost.db
+__pycache__/

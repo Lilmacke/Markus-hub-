@@ -23,6 +23,7 @@ import hub
 
 app = Flask(__name__)
 PROJEKTMAPP = os.path.dirname(os.path.abspath(__file__))
+os.chdir(PROJEKTMAPP)  # så relativa filnamn (raw_debug.json m.fl.) funkar oavsett varifrån servern startas
 
 
 def läs_json(filnamn, standard):
@@ -49,6 +50,11 @@ def bygg_sida():
 @app.route("/")
 def index():
     return bygg_sida()
+
+
+@app.route("/manifest.json")
+def manifest():
+    return hub.MANIFEST_JSON, 200, {"Content-Type": "application/manifest+json"}
 
 
 @app.route("/bocka", methods=["POST"])
@@ -90,6 +96,36 @@ def kost():
     return jsonify({"ok": True})
 
 
+@app.route("/fraga", methods=["POST"])
+def fraga():
+    body = request.get_json(force=True)
+    fraga_text = (body.get("fraga") or "").strip()
+
+    if not fraga_text:
+        return jsonify({"fel": "fraga krävs"}), 400
+
+    api_nyckel = hub.hämta_ai_nyckel()
+    if not api_nyckel:
+        return jsonify({"fel": "Ingen AI-nyckel konfigurerad (ai_nyckel.json saknas)"}), 400
+
+    garmin_data = läs_json("raw_debug.json", {"datum": "", "aktiviteter": [], "stats": {}})
+
+    historik = []
+    if os.path.exists(hub.HISTORIK_FIL):
+        with open(hub.HISTORIK_FIL, newline="", encoding="utf-8") as f:
+            historik = list(csv.DictReader(f))
+
+    aktiedata = läs_json("aktier_cache.json", {})
+    kost_data = hub.hämta_kost_data()
+    utmaning_data = läs_json(hub.UTMANING_FIL, {"start_datum": hub.UTMANING_START, "dagar": {}})
+
+    svar = hub.svara_pa_fraga(fraga_text, garmin_data, historik, aktiedata, kost_data, utmaning_data, api_nyckel)
+    if svar is None:
+        return jsonify({"fel": "AI-frågan misslyckades, försök igen om en stund."}), 500
+
+    return jsonify({"svar": svar})
+
+
 @app.route("/uppdatera", methods=["POST"])
 def uppdatera():
     """Körs när man trycker på 'Uppdatera nu' — kör hub.py på riktigt (Garmin-inloggning,
@@ -97,7 +133,7 @@ def uppdatera():
     med färsk data direkt."""
     try:
         resultat = subprocess.run(
-            [sys.executable, "hub.py", "--tyst"],
+            [sys.executable, "hub.py"],
             cwd=PROJEKTMAPP,
             capture_output=True,
             text=True,
