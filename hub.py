@@ -819,10 +819,10 @@ def kost_rad(etikett, fält, värde, mål, enhet, färg):
             <span class="kost-etikett">{etikett}</span>
             <span class="kost-mal">/ {mål}{enhet}</span>
         </div>
-        <input type="number" class="kost-input" value="{visat_värde}" placeholder="0"
-               data-falt="{fält}" onchange="sparaKost(this)">
-        <div class="progress" style="margin-top:0.4rem;">
-            <div class="progress-fill" style="width:{procent}%; background:{färg};"></div>
+        <div class="kost-body">
+            <input type="number" class="kost-input" value="{visat_värde}" placeholder="0"
+                   data-falt="{fält}" onchange="sparaKost(this)">
+            {ring_med_procent(procent, färg, storlek=44, tjocklek=5)}
         </div>
     </div>"""
 
@@ -862,6 +862,44 @@ def bygg_kost_html(idag_str):
         }});
     }}
     </script>"""
+
+
+def bygg_makro_donut_html(idag_str):
+    dagens = hämta_kost_data().get(idag_str, {})
+    delar = [
+        (dagens.get("protein") or 0) * 4,
+        (dagens.get("fett") or 0) * 9,
+        (dagens.get("kolhydrater") or 0) * 4,
+    ]
+    etiketter = ["Protein", "Fett", "Kolhydrater"]
+    färger = ["var(--red)", "var(--purple)", "var(--teal)"]
+    total_kcal = sum(delar)
+
+    if total_kcal <= 0:
+        return """
+    <div class="card" style="margin-bottom:1rem;">
+        <h2>Kalorifördelning</h2>
+        <div class="chart-empty">Logga protein, fett och kolhydrater idag för att se fördelningen.</div>
+    </div>"""
+
+    donut = donut_diagram(list(zip(delar, färger)), storlek=150, tjocklek=24)
+    legend = "".join(
+        f'<div class="donut-legend-item"><span class="donut-dot" style="background:{färg}"></span>'
+        f"{etikett} <strong>{round(värde / total_kcal * 100)}%</strong></div>"
+        for värde, färg, etikett in zip(delar, färger, etiketter)
+        if värde > 0
+    )
+    return f"""
+    <div class="card" style="margin-bottom:1rem;">
+        <h2>Kalorifördelning <span class="tile-sub">idag, av loggad kost</span></h2>
+        <div class="donut-rad">
+            <div class="ring-wrap" style="width:150px; height:150px;">
+                {donut}
+                <div class="ring-procent" style="font-size:0.95rem;">{tal_sep(round(total_kcal))} kcal</div>
+            </div>
+            <div class="donut-legend">{legend}</div>
+        </div>
+    </div>"""
 
 
 def bygg_kost_historik_html():
@@ -1218,6 +1256,51 @@ def sparkline(värden, färg="#3b82f6", bredd=56, höjd=20):
         f'<svg width="{bredd}" height="{höjd}" viewBox="0 0 {bredd} {höjd}" class="sparkline">'
         f'<polyline points="{pts}" fill="none" stroke="{färg}" stroke-width="1.5"/>{prick}</svg>'
     )
+
+
+def cirkel_diagram(procent, färg="var(--green)", storlek=64, tjocklek=8):
+    """Cirkulär progress-ring (0-100%), t.ex. till mål mot dagens steg eller kost."""
+    procent = max(0, min(100, procent or 0))
+    radie = (storlek - tjocklek) / 2
+    omkrets = 2 * math.pi * radie
+    fylld = omkrets * procent / 100
+    mitt = storlek / 2
+    return f"""<svg width="{storlek}" height="{storlek}" viewBox="0 0 {storlek} {storlek}">
+        <circle cx="{mitt}" cy="{mitt}" r="{radie}" fill="none" stroke="var(--card-2)" stroke-width="{tjocklek}"/>
+        <circle cx="{mitt}" cy="{mitt}" r="{radie}" fill="none" stroke="{färg}" stroke-width="{tjocklek}"
+                stroke-linecap="round" stroke-dasharray="{fylld:.1f} {omkrets:.1f}"
+                transform="rotate(-90 {mitt} {mitt})"/>
+    </svg>"""
+
+
+def ring_med_procent(procent, färg="var(--green)", storlek=48, tjocklek=6):
+    """En cirkel_diagram-ring med procenttalet centrerat i mitten."""
+    return (
+        f'<div class="ring-wrap" style="width:{storlek}px; height:{storlek}px;">'
+        f"{cirkel_diagram(procent, färg, storlek, tjocklek)}"
+        f'<div class="ring-procent">{round(procent or 0)}%</div></div>'
+    )
+
+
+def donut_diagram(delar, storlek=140, tjocklek=22):
+    """Flerfärgat donutdiagram. delar: lista av (värde, färg)."""
+    total = sum(v for v, _ in delar) or 1
+    radie = (storlek - tjocklek) / 2
+    omkrets = 2 * math.pi * radie
+    mitt = storlek / 2
+    svg_delar = []
+    kumulativ_grad = 0.0
+    for värde, färg in delar:
+        if värde <= 0:
+            continue
+        andel = värde / total
+        längd = omkrets * andel
+        svg_delar.append(
+            f'<circle cx="{mitt}" cy="{mitt}" r="{radie}" fill="none" stroke="{färg}" stroke-width="{tjocklek}" '
+            f'stroke-dasharray="{längd:.1f} {omkrets:.1f}" transform="rotate({kumulativ_grad - 90:.1f} {mitt} {mitt})"/>'
+        )
+        kumulativ_grad += andel * 360
+    return f'<svg width="{storlek}" height="{storlek}" viewBox="0 0 {storlek} {storlek}">{"".join(svg_delar)}</svg>'
 
 
 def meny_rad(etikett, vy_id):
@@ -1665,6 +1748,31 @@ def utmaning_statistik(data):
     }
 
 
+def bygg_utmaning_heatmap_html(utmaning_data):
+    """Rutnät (som GitHubs bidragsgraf) med en ruta per utmaningsdag, färgad efter hur många
+    av de 5 kategorierna som klarades den dagen."""
+    start = datetime.date.fromisoformat(utmaning_data["start_datum"])
+    dagar = utmaning_data["dagar"]
+    idag = datetime.date.today()
+    antal_kategorier = len(DAGLIGA_KATEGORIER)
+
+    rutor = ""
+    for i in range(UTMANING_LÄNGD):
+        datum = start + datetime.timedelta(days=i)
+        datum_str = datum.isoformat()
+        if datum > idag:
+            rutor += f'<div class="heatmap-ruta framtid" title="Dag {i + 1}: kommande"></div>'
+            continue
+        rad = dagar.get(datum_str, {})
+        antal_klara = sum(1 for nyckel, _ in DAGLIGA_KATEGORIER if (rad.get(nyckel) or {}).get("klar"))
+        opacitet = 0.12 if antal_klara == 0 else 0.12 + 0.88 * antal_klara / antal_kategorier
+        rutor += (
+            f'<div class="heatmap-ruta" style="background:rgba(34,197,94,{opacitet:.2f})" '
+            f'title="Dag {i + 1} ({datum_str}): {antal_klara}/{antal_kategorier} klara"></div>'
+        )
+    return f'<div class="heatmap-grid">{rutor}</div>'
+
+
 def bygg_utmaning_html(utmaning_data, idag_str):
     statistik = utmaning_statistik(utmaning_data)
     dagens = utmaning_data["dagar"].get(idag_str, {})
@@ -1691,6 +1799,7 @@ def bygg_utmaning_html(utmaning_data, idag_str):
             {tile("Nuvarande streak", statistik["aktuell_streak"], " dagar", accent="var(--green)")}
             {tile("Längsta streak", statistik["längsta_streak"], " dagar", accent="var(--purple)")}
         </div>
+        {bygg_utmaning_heatmap_html(utmaning_data)}
         <div style="margin-top:1rem;">
             {mål_rader}
         </div>
@@ -1951,27 +2060,45 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
     .vy {{ display:flex; flex-direction:column; gap:1rem; animation: vy-fade 0.18s ease; }}
     @keyframes vy-fade {{ from {{ opacity:0; transform:translateY(4px); }} to {{ opacity:1; transform:none; }} }}
 
+    .dag-hero {{ background:radial-gradient(circle at 15% 20%, rgba(34,197,94,0.14), transparent 60%),
+                              radial-gradient(circle at 85% 80%, rgba(59,130,246,0.12), transparent 60%),
+                              var(--card);
+                  border:1px solid var(--border); border-radius:20px; padding:1.4rem 1.4rem 1.2rem; }}
     .dag-hero-datum {{ font-size:1.4rem; font-weight:700; margin-bottom:0.9rem; }}
 
     .meny-rad {{ display:flex; justify-content:space-between; align-items:center; padding:0.9rem 0.1rem;
-                  border-bottom:1px solid var(--border); font-size:0.95rem; font-weight:600; cursor:pointer; }}
+                  border-bottom:1px solid var(--border); font-size:0.95rem; font-weight:600; cursor:pointer;
+                  transition:color 0.15s ease; }}
     .meny-rad:last-child {{ border-bottom:none; }}
+    .meny-rad:hover {{ color:var(--green); }}
     .meny-pil {{ color:var(--muted); font-size:1.3rem; }}
 
-    .card {{ background:var(--card); border:1px solid var(--border); border-radius:16px; padding:1.25rem; }}
+    .ring-wrap {{ position:relative; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }}
+    .ring-procent {{ position:absolute; font-size:0.68rem; font-weight:700; color:var(--text); }}
+
+    .donut-rad {{ display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap; }}
+    .donut-legend {{ display:flex; flex-direction:column; gap:0.5rem; font-size:0.85rem; }}
+    .donut-legend-item {{ display:flex; align-items:center; gap:0.5rem; }}
+    .donut-dot {{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }}
+
+    .heatmap-grid {{ display:grid; grid-template-columns: repeat(10, 1fr); gap:5px; margin-top:1rem; }}
+    .heatmap-ruta {{ aspect-ratio:1; border-radius:5px; }}
+    .heatmap-ruta.framtid {{ background:transparent; border:1px dashed var(--border); }}
+
+    .card {{ background:var(--card); border:1px solid var(--border); border-radius:16px; padding:1.25rem;
+              box-shadow:0 2px 10px rgba(0,0,0,0.25); }}
 
     .row-3 {{ display:grid; grid-template-columns: 1.3fr 1fr; gap:1rem; }}
     .row-4 {{ display:grid; grid-template-columns: repeat(4, 1fr); gap:1rem; }}
     .row-2 {{ display:grid; grid-template-columns: 1fr 1fr; gap:1rem; }}
     .stack {{ display:flex; flex-direction:column; gap:1rem; }}
 
-    .big-tile {{ display:flex; flex-direction:column; justify-content:space-between; }}
+    .big-tile {{ display:flex; flex-direction:row; align-items:center; justify-content:space-between; gap:1rem; }}
     .tile-label {{ font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); }}
     .big-value {{ font-size:2.1rem; font-weight:700; margin-top:0.4rem; }}
     .big-value .tile-sub {{ font-size:1rem; color:var(--muted); font-weight:400; }}
     .progress {{ background:rgba(255,255,255,0.08); border-radius:999px; height:6px; margin-top:0.9rem; overflow:hidden; }}
     .progress-fill {{ background:var(--green); height:100%; border-radius:999px; }}
-    .tile-footnote {{ font-size:0.75rem; color:var(--muted); margin-top:0.5rem; }}
 
     .medium-tile {{ border-left:3px solid var(--accent, var(--green)); }}
     .medium-value {{ font-size:1.6rem; font-weight:700; margin-top:0.3rem; }}
@@ -2009,7 +2136,8 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
                   font-size:0.7rem; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:0.35rem; }}
     .kost-etikett {{ font-weight:600; color:var(--text); }}
     .kost-mal {{ color:var(--muted); }}
-    .kost-input {{ width:100%; background:var(--card); border:1px solid var(--border); border-radius:8px;
+    .kost-body {{ display:flex; align-items:center; gap:0.6rem; }}
+    .kost-input {{ flex:1; min-width:0; background:var(--card); border:1px solid var(--border); border-radius:8px;
                     color:var(--text); font-size:1.1rem; font-weight:700; padding:0.4rem 0.6rem; }}
 
     .fraga-box {{ display:flex; gap:0.6rem; }}
@@ -2160,10 +2288,7 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
                     <div class="tile-label">Dagens steg</div>
                     <div class="big-value">{tal_sep(steg)}<span class="tile-sub"> / {tal_sep(steg_mål)}</span></div>
                 </div>
-                <div>
-                    <div class="progress"><div class="progress-fill" style="width:{steg_procent}%"></div></div>
-                    <div class="tile-footnote">{steg_procent}% av dagens mål</div>
-                </div>
+                {ring_med_procent(steg_procent, "var(--green)", storlek=76, tjocklek=8)}
             </div>
             <div class="stack">
                 <div class="card medium-tile" style="--accent:var(--teal)">
@@ -2209,6 +2334,8 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
 
     <div class="vy" id="vy-kost" style="display:none;">
         {kost_html}
+
+        {bygg_makro_donut_html(garmin['datum'])}
 
         {kost_historik_html}
 
