@@ -1,7 +1,6 @@
 garmin_konto.json
 debug_log.txt
 log.txt
-hub.py
 min_hub.html
 run_hub.bat
 test.bat
@@ -10,7 +9,6 @@ ai_nyckel.json
 ai_analys_cache.json
 manifest.json
 utmaning_status.json
-server.py
 aktier_cache.json
 strong-export/
 tiktok-export/
