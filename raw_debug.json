@@ -4867,8 +4867,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -5015,15 +5015,15 @@
       "endTimeGMT": "2026-08-13 15:24:39",
       "qualifyingDive": false,
       "activityUUID": "ba0e1341-b57e-4e42-bba1-c9d540d15fe2",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": false,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     },
     {
       "activityId": 23950105804,
@@ -5035,8 +5035,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -5175,15 +5175,15 @@
       "endTimeGMT": "2026-08-12 14:02:45",
       "qualifyingDive": false,
       "activityUUID": "5d6a05d8-4e75-4020-afbc-47daf402f9a0",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": false,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     },
     {
       "activityId": 23933222069,
@@ -5195,8 +5195,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -5319,15 +5319,15 @@
       "endTimeGMT": "2026-08-11 09:14:17",
       "qualifyingDive": false,
       "activityUUID": "a6ee6dcf-d956-4075-a42d-e04d5b27ba4e",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": false,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     },
     {
       "activityId": 23914904279,
@@ -5339,8 +5339,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -5489,15 +5489,15 @@
       "endTimeGMT": "2026-08-09 17:53:42",
       "qualifyingDive": false,
       "activityUUID": "2fe8a953-5c95-42a7-b207-42ba22117597",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": false,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     },
     {
       "activityId": 23888704225,
@@ -5509,8 +5509,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -5658,15 +5658,15 @@
       "endTimeGMT": "2026-08-07 15:37:15",
       "qualifyingDive": false,
       "activityUUID": "72dd4168-2d5b-479a-8168-859038b93c50",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": false,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     },
     {
       "activityId": 23873265043,
@@ -5678,8 +5678,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -5811,15 +5811,15 @@
       "endTimeGMT": "2026-08-06 11:03:30",
       "qualifyingDive": false,
       "activityUUID": "90a97ff3-020c-41ad-b222-975bf5f2ff08",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": false,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     },
     {
       "activityId": 23864208649,
@@ -5831,8 +5831,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -5988,15 +5988,15 @@
       "endTimeGMT": "2026-08-05 16:18:54",
       "qualifyingDive": false,
       "activityUUID": "0c7a4a96-da7d-4eea-ad4f-ae72152831f9",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": false,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     },
     {
       "activityId": 23831644701,
@@ -6008,8 +6008,8 @@
         "typeKey": "running",
         "parentTypeId": 17,
         "isHidden": false,
-        "trimmable": true,
-        "restricted": false
+        "restricted": false,
+        "trimmable": true
       },
       "eventType": {
         "typeId": 9,
@@ -6206,15 +6206,15 @@
       "endTimeGMT": "2026-08-03 05:38:37",
       "qualifyingDive": false,
       "activityUUID": "6915c8b5-1000-4f1d-b861-9bc61e7cff9a",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": false,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     },
     {
       "activityId": 23824692547,
@@ -6226,8 +6226,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -6401,15 +6401,15 @@
       "endTimeGMT": "2026-08-02 13:26:37",
       "qualifyingDive": false,
       "activityUUID": "bdecc9d4-016a-4976-a69a-d7231071ad8a",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": false,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     },
     {
       "activityId": 23808449179,
@@ -6421,8 +6421,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -6578,15 +6578,15 @@
       "endTimeGMT": "2026-08-01 07:46:05",
       "qualifyingDive": false,
       "activityUUID": "c6351dbb-7418-4291-9329-cebdaf849b62",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": false,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     },
     {
       "activityId": 23792478812,
@@ -6598,8 +6598,8 @@
         "typeKey": "running",
         "parentTypeId": 17,
         "isHidden": false,
-        "trimmable": true,
-        "restricted": false
+        "restricted": false,
+        "trimmable": true
       },
       "eventType": {
         "typeId": 9,
@@ -6796,15 +6796,15 @@
       "endTimeGMT": "2026-07-30 18:24:04",
       "qualifyingDive": false,
       "activityUUID": "18867094-a8fc-461a-9614-b25509748ebc",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": true,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": true,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     },
     {
       "activityId": 23779162274,
@@ -6816,8 +6816,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -6948,15 +6948,15 @@
       "endTimeGMT": "2026-07-29 17:32:07",
       "qualifyingDive": false,
       "activityUUID": "65cfc16f-e76e-4203-a379-5b01ecb52d1f",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": false,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     },
     {
       "activityId": 23743504544,
@@ -6968,8 +6968,8 @@
         "typeKey": "running",
         "parentTypeId": 17,
         "isHidden": false,
-        "trimmable": true,
-        "restricted": false
+        "restricted": false,
+        "trimmable": true
       },
       "eventType": {
         "typeId": 9,
@@ -7168,15 +7168,15 @@
       "endTimeGMT": "2026-07-26 19:33:29",
       "qualifyingDive": false,
       "activityUUID": "8d83d6dc-b764-4785-a49a-25ecc300ae9e",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": true,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": true,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     },
     {
       "activityId": 23741783596,
@@ -7188,8 +7188,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -7329,15 +7329,15 @@
       "endTimeGMT": "2026-07-26 16:57:44",
       "qualifyingDive": false,
       "activityUUID": "f5acaf8d-baa7-48c2-a372-dee9f994172e",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": false,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     },
     {
       "activityId": 23704579768,
@@ -7349,8 +7349,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "trimmable": false,
-        "restricted": false
+        "restricted": false,
+        "trimmable": false
       },
       "eventType": {
         "typeId": 9,
@@ -7499,15 +7499,15 @@
       "endTimeGMT": "2026-07-23 15:30:41",
       "qualifyingDive": false,
       "activityUUID": "945a10ca-d255-48de-9c93-e20d41869617",
-      "atpActivity": false,
       "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "purposeful": false,
       "favorite": false,
       "manualActivity": false,
-      "elevationCorrected": false,
-      "pr": false,
-      "parent": false,
-      "decoDive": false,
-      "purposeful": false
+      "parent": false
     }
   ],
   "kroppsbatteri": [
