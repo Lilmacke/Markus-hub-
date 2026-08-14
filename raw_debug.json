@@ -5018,11 +5018,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": false,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": false,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     },
     {
@@ -5178,11 +5178,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": false,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": false,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     },
     {
@@ -5322,11 +5322,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": false,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": false,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     },
     {
@@ -5492,11 +5492,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": false,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": false,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     },
     {
@@ -5661,11 +5661,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": false,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": false,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     },
     {
@@ -5814,11 +5814,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": false,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": false,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     },
     {
@@ -5991,11 +5991,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": false,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": false,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     },
     {
@@ -6209,11 +6209,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": false,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": false,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     },
     {
@@ -6404,11 +6404,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": false,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": false,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     },
     {
@@ -6581,11 +6581,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": false,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": false,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     },
     {
@@ -6799,11 +6799,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": true,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": true,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     },
     {
@@ -6951,11 +6951,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": false,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": false,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     },
     {
@@ -7171,11 +7171,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": true,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": true,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     },
     {
@@ -7332,11 +7332,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": false,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": false,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     },
     {
@@ -7502,11 +7502,11 @@
       "decoDive": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "pr": false,
+      "manualActivity": false,
       "autoCalcCalories": false,
       "favorite": false,
-      "pr": false,
       "purposeful": false,
-      "manualActivity": false,
       "parent": false
     }
   ],
