@@ -482,6 +482,20 @@ def kort_datum(text):
     return text or ""
 
 
+VECKODAGAR = ["Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag"]
+MÅNADER = ["januari", "februari", "mars", "april", "maj", "juni", "juli", "augusti",
+           "september", "oktober", "november", "december"]
+
+
+def snyggt_langdatum(datum_str):
+    """2026-08-14 -> "Fredag 14 augusti". Hårdkodade svenska namn för att slippa locale-krångel."""
+    try:
+        d = datetime.date.fromisoformat(datum_str)
+    except (ValueError, TypeError):
+        return datum_str or ""
+    return f"{VECKODAGAR[d.weekday()]} {d.day} {MÅNADER[d.month - 1]}"
+
+
 def intraday_serie(data, array_nyckel):
     """Plockar ut [(tidsstämpel_ms, värde), ...] ur Garmins dagsdata-strukturer.
     Garmin använder negativa specialkoder (t.ex. -1, -2) för "ingen mätning just nu"
@@ -1206,6 +1220,14 @@ def sparkline(värden, färg="#3b82f6", bredd=56, höjd=20):
     )
 
 
+def meny_rad(etikett, vy_id):
+    return (
+        f'<div class="meny-rad" role="button" tabindex="0" onclick="visaVy(\'{vy_id}\')" '
+        f'onkeydown="if(event.key===\'Enter\'||event.key===\' \'){{event.preventDefault();visaVy(\'{vy_id}\');}}">'
+        f'{etikett} <span class="meny-pil">›</span></div>'
+    )
+
+
 def tile(etikett, värde, enhet="", accent="var(--blue)", historik=None):
     visning = "–" if värde is None else f"{värde}{enhet}"
     spark = sparkline(historik, färg=accent) if historik else ""
@@ -1872,6 +1894,7 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
     steg = nyckeltal["steg"] or 0
     steg_mål = 10000
     steg_procent = max(0, min(100, round(steg / steg_mål * 100)))
+    halsning_text = hälsning()
 
     html = f"""<!DOCTYPE html>
 <html lang="sv">
@@ -1921,9 +1944,19 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
     .uppdatera-knapp {{ background:var(--blue); color:white; border:none; border-radius:999px;
                          padding:0.35rem 0.9rem; font-size:0.75rem; font-weight:600; cursor:pointer; }}
     .uppdatera-knapp:disabled {{ opacity:0.6; cursor:default; }}
+    .tillbaka-knapp {{ background:var(--card-2); color:var(--text); border:1px solid var(--border);
+                        border-radius:999px; padding:0.35rem 0.9rem; font-size:0.75rem; font-weight:600;
+                        cursor:pointer; }}
 
-    .layout {{ display:grid; grid-template-columns: 2fr 1fr; gap:1rem; align-items:start; }}
-    .main, .aside {{ display:flex; flex-direction:column; gap:1rem; }}
+    .vy {{ display:flex; flex-direction:column; gap:1rem; animation: vy-fade 0.18s ease; }}
+    @keyframes vy-fade {{ from {{ opacity:0; transform:translateY(4px); }} to {{ opacity:1; transform:none; }} }}
+
+    .dag-hero-datum {{ font-size:1.4rem; font-weight:700; margin-bottom:0.9rem; }}
+
+    .meny-rad {{ display:flex; justify-content:space-between; align-items:center; padding:0.9rem 0.1rem;
+                  border-bottom:1px solid var(--border); font-size:0.95rem; font-weight:600; cursor:pointer; }}
+    .meny-rad:last-child {{ border-bottom:none; }}
+    .meny-pil {{ color:var(--muted); font-size:1.3rem; }}
 
     .card {{ background:var(--card); border:1px solid var(--border); border-radius:16px; padding:1.25rem; }}
 
@@ -2021,7 +2054,6 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
     .bock-rad.sparar {{ opacity:0.5; }}
 
     @media (max-width: 860px) {{
-        .layout {{ grid-template-columns: 1fr; }}
         .row-3 {{ grid-template-columns: 1fr; }}
         .row-4 {{ grid-template-columns: 1fr 1fr; }}
         .chart-grid {{ grid-template-columns: 1fr; }}
@@ -2046,8 +2078,9 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
     }}
     </script>
     <div class="topbar">
-        <h1>{hälsning()}</h1>
+        <h1 id="vy-titel">{halsning_text}</h1>
         <div style="display:flex; align-items:center; gap:0.6rem;">
+            <button id="tillbaka-knapp" class="tillbaka-knapp" style="display:none;" onclick="visaVy('vy-hem')">← Tillbaka</button>
             <div class="pill">Uppdaterad {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}</div>
             <button id="uppdatera-knapp" class="uppdatera-knapp" onclick="uppdateraNu()">🔄 Uppdatera nu</button>
         </div>
@@ -2068,105 +2101,147 @@ def bygg_html(garmin, aktier, historik, utmaning_data=None):
                 alert('Kunde inte uppdatera. Öppna sidan via serverlänken (Tailscale) för att kunna göra detta.');
             }});
     }}
+
+    var HALSNING = {json.dumps(halsning_text)};
+    var VY_NAMN = {{
+        'vy-hem': HALSNING,
+        'vy-traning': 'Träning & aktivitet',
+        'vy-kost': 'Kost',
+        'vy-portfolj': 'Portföljen',
+        'vy-kropp': 'Kroppssammansättning',
+        'vy-historik': 'Historik & trender'
+    }};
+    function visaVy(id) {{
+        document.querySelectorAll('.vy').forEach(function(el) {{ el.style.display = 'none'; }});
+        var mal = document.getElementById(id);
+        if (mal) mal.style.display = 'flex';
+        document.getElementById('vy-titel').textContent = VY_NAMN[id] || HALSNING;
+        document.getElementById('tillbaka-knapp').style.display = (id === 'vy-hem') ? 'none' : 'inline-block';
+        window.scrollTo(0, 0);
+    }}
     </script>
 
-    <div class="card" style="margin-bottom:1rem;">
-        <h2>Analys <span class="tile-sub">uppdateras varje körning</span></h2>
-        {insikter_html}
+    <div class="vy" id="vy-hem">
+        <div class="dag-hero">
+            <div class="dag-hero-datum">{snyggt_langdatum(garmin['datum'])}</div>
+            <div class="row-4">
+                {tile("Sleep score", nyckeltal["sleep_score"], "/100", accent="var(--green)", historik=sleep_score_värden)}
+                {tile("Body Battery", nyckeltal["batteri"], "", accent="var(--orange)", historik=batteri_värden)}
+                {tile("Vilopuls", nyckeltal["vilopuls"], " bpm", accent="var(--teal)", historik=vilopuls_värden)}
+                {tile("HRV", nyckeltal["hrv"], " ms", accent="var(--purple)", historik=hrv_värden)}
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Analys <span class="tile-sub">gårdagen &amp; natten mot ditt snitt</span></h2>
+            {insikter_html}
+        </div>
+
+        {bygg_fraga_html()}
+
+        {utmaning_html}
+
+        <div class="card">
+            <h2>Mer</h2>
+            {meny_rad("🏃 Träning &amp; aktivitet", "vy-traning")}
+            {meny_rad("🍽️ Kost", "vy-kost")}
+            {meny_rad("💰 Portföljen", "vy-portfolj")}
+            {meny_rad("🧍 Kroppssammansättning", "vy-kropp")}
+            {meny_rad("📈 Historik &amp; trender", "vy-historik")}
+        </div>
     </div>
 
-    {bygg_fraga_html()}
+    <div class="vy" id="vy-traning" style="display:none;">
+        {morgonrutin_html}
 
-    {utmaning_html}
-
-    {morgonrutin_html}
-
-    {kost_html}
-
-    {kost_historik_html}
-
-    {kaloribalans_html}
-
-    <div class="layout">
-        <div class="main">
-            <div class="row-3">
-                <div class="card big-tile">
-                    <div>
-                        <div class="tile-label">Dagens steg</div>
-                        <div class="big-value">{tal_sep(steg)}<span class="tile-sub"> / {tal_sep(steg_mål)}</span></div>
-                    </div>
-                    <div>
-                        <div class="progress"><div class="progress-fill" style="width:{steg_procent}%"></div></div>
-                        <div class="tile-footnote">{steg_procent}% av dagens mål</div>
-                    </div>
+        <div class="row-3">
+            <div class="card big-tile">
+                <div>
+                    <div class="tile-label">Dagens steg</div>
+                    <div class="big-value">{tal_sep(steg)}<span class="tile-sub"> / {tal_sep(steg_mål)}</span></div>
                 </div>
-                <div class="stack">
-                    <div class="card medium-tile" style="--accent:var(--teal)">
-                        <div class="tile-label">Vilopuls</div>
-                        <div class="medium-value">{nyckeltal['vilopuls'] if nyckeltal['vilopuls'] else '–'} bpm</div>
-                        <span class="tile-sub">HRV-status: {nyckeltal['hrv_status'] or '–'}</span>
-                        <div class="tile-spark">{sparkline(vilopuls_värden, färg="var(--teal)")}</div>
-                    </div>
-                    <div class="card medium-tile" style="--accent:var(--green)">
-                        <div class="tile-label">Sömnkvalitet</div>
-                        <div class="medium-value">{nyckeltal['sleep_score'] if nyckeltal['sleep_score'] else '–'}/100</div>
-                        <span class="tile-sub">{nyckeltal['somn_tid'] or '–'} · Batteri: {nyckeltal['batteri'] if nyckeltal['batteri'] else '–'}</span>
-                        <div class="tile-spark">{sparkline(sleep_score_värden, färg="var(--green)")}</div>
-                    </div>
+                <div>
+                    <div class="progress"><div class="progress-fill" style="width:{steg_procent}%"></div></div>
+                    <div class="tile-footnote">{steg_procent}% av dagens mål</div>
                 </div>
             </div>
-
-            <div class="row-4">
-                {tile("Stress (snitt)", nyckeltal["stress"], accent="var(--red)", historik=stress_hist_värden)}
-                {tile("VO2 max", nyckeltal["vo2max"], accent="var(--blue)")}
-                {tile("Totala kalorier", nyckeltal["total_kalorier"], " kcal", accent="var(--orange)")}
-                {tile("Aktiva kalorier", nyckeltal["aktiv_kalorier"], " kcal", accent="var(--green)")}
-            </div>
-
-            <div class="card">
-                <h2>Senaste träning</h2>
-                <div class="list">
-                    {aktivitet_rader}
+            <div class="stack">
+                <div class="card medium-tile" style="--accent:var(--teal)">
+                    <div class="tile-label">Vilopuls</div>
+                    <div class="medium-value">{nyckeltal['vilopuls'] if nyckeltal['vilopuls'] else '–'} bpm</div>
+                    <span class="tile-sub">HRV-status: {nyckeltal['hrv_status'] or '–'}</span>
+                    <div class="tile-spark">{sparkline(vilopuls_värden, färg="var(--teal)")}</div>
                 </div>
-            </div>
-
-            {dagsvariation_html}
-
-            {historik_html}
-        </div>
-
-        <div class="aside">
-            <div class="card">
-                <h2>Portföljen</h2>
-                {bransch_sektioner_html}
-            </div>
-
-            <div class="card">
-                <h2>Kroppssammansättning</h2>
-                <div class="row-2">
-                    {tile("Vikt", nyckeltal["vikt"], " kg", accent="var(--blue)")}
-                    {tile("Kroppsfett", nyckeltal["kroppsfett"], " %", accent="var(--orange)")}
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>Träning &amp; återhämtning</h2>
-                <div class="row-2">
-                    {tile("Training readiness", nyckeltal["training_readiness"], "/100", accent="var(--green)")}
-                    {tile("Recovery", tid_kort(nyckeltal["recovery_tid"]), accent="var(--blue)")}
-                </div>
-                <div class="tile-sub" style="margin-top:0.8rem;">Training status: <strong style="color:var(--text)">{nyckeltal['training_status'] or '–'}</strong></div>
-            </div>
-
-            <div class="card">
-                <h2>Historik</h2>
-                <div class="tile-sub" style="margin-bottom:0.8rem;">{len(historik)} dag(ar) sparade i {HISTORIK_FIL}</div>
-                <div class="row-2">
-                    {tile("Kalorier", nyckeltal["total_kalorier"], " kcal", accent="var(--orange)")}
-                    {tile("Batteri", nyckeltal["batteri"], accent="var(--orange)", historik=batteri_värden)}
+                <div class="card medium-tile" style="--accent:var(--green)">
+                    <div class="tile-label">Sömnkvalitet</div>
+                    <div class="medium-value">{nyckeltal['sleep_score'] if nyckeltal['sleep_score'] else '–'}/100</div>
+                    <span class="tile-sub">{nyckeltal['somn_tid'] or '–'} · Batteri: {nyckeltal['batteri'] if nyckeltal['batteri'] else '–'}</span>
+                    <div class="tile-spark">{sparkline(sleep_score_värden, färg="var(--green)")}</div>
                 </div>
             </div>
         </div>
+
+        <div class="row-4">
+            {tile("Stress (snitt)", nyckeltal["stress"], accent="var(--red)", historik=stress_hist_värden)}
+            {tile("VO2 max", nyckeltal["vo2max"], accent="var(--blue)")}
+            {tile("Totala kalorier", nyckeltal["total_kalorier"], " kcal", accent="var(--orange)")}
+            {tile("Aktiva kalorier", nyckeltal["aktiv_kalorier"], " kcal", accent="var(--green)")}
+        </div>
+
+        <div class="card">
+            <h2>Träning &amp; återhämtning</h2>
+            <div class="row-2">
+                {tile("Training readiness", nyckeltal["training_readiness"], "/100", accent="var(--green)")}
+                {tile("Recovery", tid_kort(nyckeltal["recovery_tid"]), accent="var(--blue)")}
+            </div>
+            <div class="tile-sub" style="margin-top:0.8rem;">Training status: <strong style="color:var(--text)">{nyckeltal['training_status'] or '–'}</strong></div>
+        </div>
+
+        <div class="card">
+            <h2>Senaste träning</h2>
+            <div class="list">
+                {aktivitet_rader}
+            </div>
+        </div>
+
+        {dagsvariation_html}
+    </div>
+
+    <div class="vy" id="vy-kost" style="display:none;">
+        {kost_html}
+
+        {kost_historik_html}
+
+        {kaloribalans_html}
+    </div>
+
+    <div class="vy" id="vy-portfolj" style="display:none;">
+        <div class="card">
+            <h2>Portföljen</h2>
+            {bransch_sektioner_html}
+        </div>
+    </div>
+
+    <div class="vy" id="vy-kropp" style="display:none;">
+        <div class="card">
+            <h2>Kroppssammansättning</h2>
+            <div class="row-2">
+                {tile("Vikt", nyckeltal["vikt"], " kg", accent="var(--blue)")}
+                {tile("Kroppsfett", nyckeltal["kroppsfett"], " %", accent="var(--orange)")}
+            </div>
+        </div>
+    </div>
+
+    <div class="vy" id="vy-historik" style="display:none;">
+        <div class="card">
+            <div class="tile-sub" style="margin-bottom:0.8rem;">{len(historik)} dag(ar) sparade i {HISTORIK_FIL}</div>
+            <div class="row-2">
+                {tile("Kalorier", nyckeltal["total_kalorier"], " kcal", accent="var(--orange)")}
+                {tile("Batteri", nyckeltal["batteri"], accent="var(--orange)", historik=batteri_värden)}
+            </div>
+        </div>
+
+        {historik_html}
     </div>
 </body>
 </html>
