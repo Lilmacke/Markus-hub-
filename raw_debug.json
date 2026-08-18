@@ -46,17 +46,17 @@
   },
   "stats": {
     "userProfileId": 147844934,
-    "totalKilocalories": 89.0,
+    "totalKilocalories": 110.0,
     "activeKilocalories": 0.0,
-    "bmrKilocalories": 89.0,
-    "wellnessKilocalories": 89.0,
+    "bmrKilocalories": 110.0,
+    "wellnessKilocalories": 110.0,
     "burnedKilocalories": null,
     "consumedKilocalories": null,
     "remainingKilocalories": null,
-    "totalSteps": null,
+    "totalSteps": 15,
     "netCalorieGoal": null,
-    "totalDistanceMeters": 0,
-    "wellnessDistanceMeters": 0,
+    "totalDistanceMeters": 13,
+    "wellnessDistanceMeters": 13,
     "wellnessActiveKilocalories": 0.0,
     "netRemainingKilocalories": 0.0,
     "userDailySummaryId": 147844934,
@@ -69,13 +69,13 @@
     "dailyStepGoal": 10000,
     "wellnessStartTimeGmt": "2026-08-17T22:00:00.0",
     "wellnessStartTimeLocal": "2026-08-18T00:00:00.0",
-    "wellnessEndTimeGmt": "2026-08-17T22:54:00.0",
-    "wellnessEndTimeLocal": "2026-08-18T00:54:00.0",
-    "durationInMilliseconds": 3240000,
+    "wellnessEndTimeGmt": "2026-08-17T23:07:00.0",
+    "wellnessEndTimeLocal": "2026-08-18T01:07:00.0",
+    "durationInMilliseconds": 4020000,
     "wellnessDescription": null,
-    "highlyActiveSeconds": 0,
+    "highlyActiveSeconds": 1,
     "activeSeconds": 0,
-    "sedentarySeconds": 3240,
+    "sedentarySeconds": 4019,
     "sleepingSeconds": 0,
     "includesWellnessData": true,
     "includesActivityData": false,
@@ -89,39 +89,39 @@
     "floorsDescended": 0.0,
     "intensityMinutesGoal": 150,
     "userFloorsAscendedGoal": 10,
-    "minHeartRate": 52,
-    "maxHeartRate": 60,
+    "minHeartRate": 48,
+    "maxHeartRate": 74,
     "restingHeartRate": 49,
     "lastSevenDaysAvgRestingHeartRate": 45,
     "source": "GARMIN",
     "averageStressLevel": 19,
-    "maxStressLevel": 25,
-    "stressDuration": null,
-    "restStressDuration": 3240,
+    "maxStressLevel": 65,
+    "stressDuration": 180,
+    "restStressDuration": 3840,
     "activityStressDuration": null,
     "uncategorizedStressDuration": null,
-    "totalStressDuration": 3240,
-    "lowStressDuration": null,
-    "mediumStressDuration": null,
+    "totalStressDuration": 4020,
+    "lowStressDuration": 120,
+    "mediumStressDuration": 60,
     "highStressDuration": null,
-    "stressPercentage": 0.0,
-    "restStressPercentage": 100.0,
+    "stressPercentage": 4.48,
+    "restStressPercentage": 95.52,
     "activityStressPercentage": 0.0,
     "uncategorizedStressPercentage": 0.0,
-    "lowStressPercentage": 0.0,
-    "mediumStressPercentage": 0.0,
+    "lowStressPercentage": 2.99,
+    "mediumStressPercentage": 1.49,
     "highStressPercentage": 0.0,
     "stressQualifier": "UNKNOWN",
-    "measurableAwakeDuration": 3240,
+    "measurableAwakeDuration": 4020,
     "measurableAsleepDuration": 0,
-    "lastSyncTimestampGMT": "2026-08-17T22:54:42.3",
-    "minAvgHeartRate": 52,
-    "maxAvgHeartRate": 57,
-    "bodyBatteryChargedValue": 5,
+    "lastSyncTimestampGMT": "2026-08-17T23:07:51.235",
+    "minAvgHeartRate": 49,
+    "maxAvgHeartRate": 68,
+    "bodyBatteryChargedValue": 6,
     "bodyBatteryDrainedValue": 0,
-    "bodyBatteryHighestValue": 11,
+    "bodyBatteryHighestValue": 12,
     "bodyBatteryLowestValue": 6,
-    "bodyBatteryMostRecentValue": 11,
+    "bodyBatteryMostRecentValue": 12,
     "bodyBatteryDuringSleep": null,
     "bodyBatteryAtWakeTime": null,
     "bodyBatteryVersion": 3.0,
@@ -133,11 +133,11 @@
     "latestSpo2ReadingTimeLocal": null,
     "averageMonitoringEnvironmentAltitude": 34.0,
     "restingCaloriesFromActivity": null,
-    "avgWakingRespirationValue": 17.0,
+    "avgWakingRespirationValue": 16.0,
     "highestRespirationValue": 18.0,
-    "lowestRespirationValue": 15.0,
-    "latestRespirationValue": 17.0,
-    "latestRespirationTimeGMT": "2026-08-17T22:54:00.0",
+    "lowestRespirationValue": 9.0,
+    "latestRespirationValue": 13.0,
+    "latestRespirationTimeGMT": "2026-08-17T23:07:00.0",
     "respirationAlgorithmVersion": 200
   },
   "aktiviteter": [
@@ -300,15 +300,15 @@
       "endTimeGMT": "2026-08-16 20:21:51",
       "qualifyingDive": false,
       "activityUUID": "e691189f-42ee-4558-9c40-6d1e1bdba7f8",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": false,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     },
     {
       "activityId": 23963602314,
@@ -468,15 +468,15 @@
       "endTimeGMT": "2026-08-13 15:24:39",
       "qualifyingDive": false,
       "activityUUID": "ba0e1341-b57e-4e42-bba1-c9d540d15fe2",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": false,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     },
     {
       "activityId": 23950105804,
@@ -628,15 +628,15 @@
       "endTimeGMT": "2026-08-12 14:02:45",
       "qualifyingDive": false,
       "activityUUID": "5d6a05d8-4e75-4020-afbc-47daf402f9a0",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": false,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     },
     {
       "activityId": 23933222069,
@@ -772,15 +772,15 @@
       "endTimeGMT": "2026-08-11 09:14:17",
       "qualifyingDive": false,
       "activityUUID": "a6ee6dcf-d956-4075-a42d-e04d5b27ba4e",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": false,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     },
     {
       "activityId": 23914904279,
@@ -942,15 +942,15 @@
       "endTimeGMT": "2026-08-09 17:53:42",
       "qualifyingDive": false,
       "activityUUID": "2fe8a953-5c95-42a7-b207-42ba22117597",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": false,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     },
     {
       "activityId": 23888704225,
@@ -1111,15 +1111,15 @@
       "endTimeGMT": "2026-08-07 15:37:15",
       "qualifyingDive": false,
       "activityUUID": "72dd4168-2d5b-479a-8168-859038b93c50",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": false,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     },
     {
       "activityId": 23873265043,
@@ -1264,15 +1264,15 @@
       "endTimeGMT": "2026-08-06 11:03:30",
       "qualifyingDive": false,
       "activityUUID": "90a97ff3-020c-41ad-b222-975bf5f2ff08",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": false,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     },
     {
       "activityId": 23864208649,
@@ -1441,15 +1441,15 @@
       "endTimeGMT": "2026-08-05 16:18:54",
       "qualifyingDive": false,
       "activityUUID": "0c7a4a96-da7d-4eea-ad4f-ae72152831f9",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": false,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     },
     {
       "activityId": 23831644701,
@@ -1659,15 +1659,15 @@
       "endTimeGMT": "2026-08-03 05:38:37",
       "qualifyingDive": false,
       "activityUUID": "6915c8b5-1000-4f1d-b861-9bc61e7cff9a",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": false,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     },
     {
       "activityId": 23824692547,
@@ -1854,15 +1854,15 @@
       "endTimeGMT": "2026-08-02 13:26:37",
       "qualifyingDive": false,
       "activityUUID": "bdecc9d4-016a-4976-a69a-d7231071ad8a",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": false,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     },
     {
       "activityId": 23808449179,
@@ -2031,15 +2031,15 @@
       "endTimeGMT": "2026-08-01 07:46:05",
       "qualifyingDive": false,
       "activityUUID": "c6351dbb-7418-4291-9329-cebdaf849b62",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": false,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     },
     {
       "activityId": 23792478812,
@@ -2249,15 +2249,15 @@
       "endTimeGMT": "2026-07-30 18:24:04",
       "qualifyingDive": false,
       "activityUUID": "18867094-a8fc-461a-9614-b25509748ebc",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": true,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     },
     {
       "activityId": 23779162274,
@@ -2401,15 +2401,15 @@
       "endTimeGMT": "2026-07-29 17:32:07",
       "qualifyingDive": false,
       "activityUUID": "65cfc16f-e76e-4203-a379-5b01ecb52d1f",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": false,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     },
     {
       "activityId": 23743504544,
@@ -2621,15 +2621,15 @@
       "endTimeGMT": "2026-07-26 19:33:29",
       "qualifyingDive": false,
       "activityUUID": "8d83d6dc-b764-4785-a49a-25ecc300ae9e",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": true,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     },
     {
       "activityId": 23741783596,
@@ -2782,37 +2782,37 @@
       "endTimeGMT": "2026-07-26 16:57:44",
       "qualifyingDive": false,
       "activityUUID": "f5acaf8d-baa7-48c2-a372-dee9f994172e",
+      "autoCalcCalories": false,
+      "elevationCorrected": false,
+      "atpActivity": false,
       "pr": false,
-      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "autoCalcCalories": false,
-      "parent": false,
+      "favorite": false,
       "decoDive": false,
-      "elevationCorrected": false,
-      "atpActivity": false
+      "parent": false
     }
   ],
   "kroppsbatteri": [
     {
       "date": "2026-08-18",
-      "charged": 5,
+      "charged": 6,
       "drained": 0,
       "startTimestampGMT": "2026-08-17T22:00:00.0",
-      "endTimestampGMT": "2026-08-17T22:54:00.0",
+      "endTimestampGMT": "2026-08-17T23:07:00.0",
       "startTimestampLocal": "2026-08-18T00:00:00.0",
-      "endTimestampLocal": "2026-08-18T00:54:00.0",
+      "endTimestampLocal": "2026-08-18T01:07:00.0",
       "bodyBatteryValuesArray": [
         [
           1787004000000,
           6
         ],
         [
-          1787004360000,
-          7
+          1787005080000,
+          8
         ],
         [
-          1787005080000,
+          1787005440000,
           8
         ],
         [
@@ -2820,12 +2820,12 @@
           9
         ],
         [
-          1787006160000,
-          9
+          1787006880000,
+          10
         ],
         [
-          1787007060000,
-          11
+          1787007600000,
+          12
         ]
       ],
       "bodyBatteryValueDescriptorDTOList": [
@@ -2861,7 +2861,39 @@
       "trend": null
     }
   },
-  "training_readiness": [],
+  "training_readiness": [
+    {
+      "userProfilePK": 147844934,
+      "calendarDate": "2026-08-18",
+      "timestamp": "2026-08-17T22:56:49.0",
+      "timestampLocal": "2026-08-18T00:56:49.0",
+      "deviceId": 3639715496,
+      "level": "HIGH",
+      "feedbackLong": "HIGH_RT_AVAILABLE_SS_UNKNOWN",
+      "feedbackShort": "WELL_RECOVERED",
+      "score": 82,
+      "sleepScore": null,
+      "sleepScoreFactorPercent": 0,
+      "sleepScoreFactorFeedback": "NONE",
+      "recoveryTime": 0,
+      "recoveryTimeFactorPercent": 100,
+      "recoveryTimeFactorFeedback": "VERY_GOOD",
+      "acwrFactorPercent": 100,
+      "acwrFactorFeedback": "VERY_GOOD",
+      "acuteLoad": 24,
+      "stressHistoryFactorPercent": 96,
+      "stressHistoryFactorFeedback": "GOOD",
+      "hrvFactorPercent": 100,
+      "hrvFactorFeedback": "VERY_GOOD",
+      "hrvWeeklyAverage": 97,
+      "sleepHistoryFactorPercent": 30,
+      "sleepHistoryFactorFeedback": "POOR",
+      "validSleep": false,
+      "inputContext": "UPDATE_REALTIME_VARIABLES",
+      "primaryActivityTracker": true,
+      "recoveryTimeChangePhrase": null
+    }
+  ],
   "training_status": {
     "userId": 147844934,
     "mostRecentVO2Max": null,
@@ -2873,11 +2905,11 @@
     "userProfilePK": 147844934,
     "calendarDate": "2026-08-18",
     "startTimestampGMT": "2026-08-17T22:00:00.0",
-    "endTimestampGMT": "2026-08-17T22:54:00.0",
+    "endTimestampGMT": "2026-08-17T23:07:00.0",
     "startTimestampLocal": "2026-08-18T00:00:00.0",
     "endTimestampLocal": "2026-08-19T00:00:00.0",
-    "maxHeartRate": 57,
-    "minHeartRate": 52,
+    "maxHeartRate": 68,
+    "minHeartRate": 49,
     "restingHeartRate": 49,
     "lastSevenDaysAvgRestingHeartRate": 45,
     "heartRateValueDescriptors": [
@@ -2998,6 +3030,34 @@
       [
         1787007120000,
         53
+      ],
+      [
+        1787007240000,
+        64
+      ],
+      [
+        1787007360000,
+        49
+      ],
+      [
+        1787007480000,
+        58
+      ],
+      [
+        1787007600000,
+        55
+      ],
+      [
+        1787007720000,
+        68
+      ],
+      [
+        1787007840000,
+        51
+      ],
+      [
+        1787007960000,
+        49
       ]
     ]
   },
@@ -3005,10 +3065,10 @@
     "userProfilePK": 147844934,
     "calendarDate": "2026-08-18",
     "startTimestampGMT": "2026-08-17T22:00:00.0",
-    "endTimestampGMT": "2026-08-17T22:54:00.0",
+    "endTimestampGMT": "2026-08-17T23:07:00.0",
     "startTimestampLocal": "2026-08-18T00:00:00.0",
-    "endTimestampLocal": "2026-08-18T00:54:00.0",
-    "maxStressLevel": 25,
+    "endTimestampLocal": "2026-08-18T01:07:00.0",
+    "maxStressLevel": 65,
     "avgStressLevel": 19,
     "stressChartValueOffset": 1,
     "stressChartYAxisOrigin": -1,
@@ -3094,6 +3154,26 @@
       [
         1787007060000,
         18
+      ],
+      [
+        1787007240000,
+        17
+      ],
+      [
+        1787007420000,
+        16
+      ],
+      [
+        1787007600000,
+        40
+      ],
+      [
+        1787007780000,
+        11
+      ],
+      [
+        1787007960000,
+        10
       ]
     ],
     "bodyBatteryValueDescriptorsDTOList": [
@@ -3221,6 +3301,36 @@
         1787007060000,
         "MEASURED",
         11,
+        3.0
+      ],
+      [
+        1787007240000,
+        "MEASURED",
+        11,
+        3.0
+      ],
+      [
+        1787007420000,
+        "MEASURED",
+        11,
+        3.0
+      ],
+      [
+        1787007600000,
+        "MEASURED",
+        12,
+        3.0
+      ],
+      [
+        1787007780000,
+        "MEASURED",
+        12,
+        3.0
+      ],
+      [
+        1787007960000,
+        "MEASURED",
+        12,
         3.0
       ]
     ]
