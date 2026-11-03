@@ -9761,8 +9761,8 @@
         "typeKey": "running",
         "parentTypeId": 17,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": true
+        "trimmable": true,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -9981,12 +9981,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
       "parent": false,
-      "pr": false,
       "rutt": [
         [
           43.61472135409713,
@@ -10604,8 +10604,8 @@
         "typeKey": "track_running",
         "parentTypeId": 1,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": true
+        "trimmable": true,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -10822,12 +10822,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
-      "parent": false,
-      "pr": false
+      "parent": false
     },
     {
       "activityId": 24468566309,
@@ -10839,8 +10839,8 @@
         "typeKey": "running",
         "parentTypeId": 17,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": true
+        "trimmable": true,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -11057,12 +11057,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
       "parent": false,
-      "pr": false,
       "rutt": [
         [
           59.33116338215768,
@@ -11680,8 +11680,8 @@
         "typeKey": "running",
         "parentTypeId": 17,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": true
+        "trimmable": true,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -11898,12 +11898,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": true,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
       "parent": false,
-      "pr": true,
       "rutt": [
         [
           59.33604282326996,
@@ -12517,8 +12517,8 @@
         "typeKey": "running",
         "parentTypeId": 17,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": true
+        "trimmable": true,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -12723,12 +12723,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
       "parent": false,
-      "pr": false,
       "rutt": [
         [
           59.33727806434035,
@@ -13342,8 +13342,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": false
+        "trimmable": false,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -13503,12 +13503,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
-      "parent": false,
-      "pr": false
+      "parent": false
     },
     {
       "activityId": 23963602314,
@@ -13520,8 +13520,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": false
+        "trimmable": false,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -13680,12 +13680,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
-      "parent": false,
-      "pr": false
+      "parent": false
     },
     {
       "activityId": 23950105804,
@@ -13697,8 +13697,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": false
+        "trimmable": false,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -13849,12 +13849,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
-      "parent": false,
-      "pr": false
+      "parent": false
     },
     {
       "activityId": 23933222069,
@@ -13866,8 +13866,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": false
+        "trimmable": false,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -14002,12 +14002,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
-      "parent": false,
-      "pr": false
+      "parent": false
     },
     {
       "activityId": 23914904279,
@@ -14019,8 +14019,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": false
+        "trimmable": false,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -14181,12 +14181,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
-      "parent": false,
-      "pr": false
+      "parent": false
     },
     {
       "activityId": 23888704225,
@@ -14198,8 +14198,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": false
+        "trimmable": false,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -14359,12 +14359,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
-      "parent": false,
-      "pr": false
+      "parent": false
     },
     {
       "activityId": 23873265043,
@@ -14376,8 +14376,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": false
+        "trimmable": false,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -14521,12 +14521,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
-      "parent": false,
-      "pr": false
+      "parent": false
     },
     {
       "activityId": 23864208649,
@@ -14538,8 +14538,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": false
+        "trimmable": false,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -14707,12 +14707,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
-      "parent": false,
-      "pr": false
+      "parent": false
     },
     {
       "activityId": 23831644701,
@@ -14724,8 +14724,8 @@
         "typeKey": "running",
         "parentTypeId": 17,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": true
+        "trimmable": true,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -14940,12 +14940,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
-      "parent": false,
-      "pr": false
+      "parent": false
     },
     {
       "activityId": 23824692547,
@@ -14957,8 +14957,8 @@
         "typeKey": "strength_training",
         "parentTypeId": 29,
         "isHidden": false,
-        "restricted": false,
-        "trimmable": false
+        "trimmable": false,
+        "restricted": false
       },
       "eventType": {
         "typeId": 9,
@@ -15144,12 +15144,12 @@
       "autoCalcCalories": false,
       "elevationCorrected": false,
       "atpActivity": false,
+      "decoDive": false,
+      "pr": false,
+      "favorite": false,
       "purposeful": false,
       "manualActivity": false,
-      "favorite": false,
-      "decoDive": false,
-      "parent": false,
-      "pr": false
+      "parent": false
     }
   ],
   "kroppsbatteri": [
